@@ -8,8 +8,8 @@ namespace QueueAnalyzer;
 /// <summary>Строка таблицы характеристик.</summary>
 public sealed record ResultView(string Name, string Symbol, string Formula, string ValueText);
 
-/// <summary>Строка диаграммы вероятностей состояний.</summary>
-public sealed record StateView(string Label, string ValueText, GridLength Filled, GridLength Rest);
+/// <summary>Строка таблицы вероятностей состояний.</summary>
+public sealed record StateView(string Label, string ValueText);
 
 public partial class MainWindow : Window
 {
@@ -90,7 +90,7 @@ public partial class MainWindow : Window
     private void OnServiceModeChanged()
     {
         if (!_ready) return;
-        ServiceLabel.Text = ServiceByIntensity ? "Интенсивность μ" : "Среднее время обслуживания tоб";
+        ServiceLabel.Text = ServiceByIntensity ? "Интенсивность μ:" : "Время обслуживания tоб:";
         // Пересчитываем введённое значение, чтобы смысл сохранился: tоб = 1/μ
         if (TryParse(ServiceBox.Text, out double v) && v > 0)
             ServiceBox.Text = Format(1 / v);
@@ -163,15 +163,7 @@ public partial class MainWindow : Window
             return new ResultView(r.Name, r.Symbol, r.Formula, Format(r.Value) + suffix);
         }).ToList();
 
-        double max = result.States.Count > 0 ? result.States.Max(s => s.P) : 1;
-        if (max <= 0) max = 1;
-        StatesList.ItemsSource = result.States.Select(s =>
-        {
-            double share = s.P / max;
-            return new StateView(s.State, Format(s.P),
-                new GridLength(share, GridUnitType.Star),
-                new GridLength(1 - share, GridUnitType.Star));
-        }).ToList();
+        StatesList.ItemsSource = result.States.Select(s => new StateView(s.State, Format(s.P))).ToList();
 
         double sum = result.States.Sum(s => s.P);
         StatesNote.Text = result.StatesTruncated
@@ -197,13 +189,13 @@ public partial class MainWindow : Window
 
     private void ShowError(string msg)
     {
-        ErrorText.Text = msg;
-        ErrorBorder.Visibility = Visibility.Visible;
+        ErrorText.Text = "Ошибка: " + msg;
+        ErrorText.Visibility = Visibility.Visible;
     }
 
     private void HideResults()
     {
-        ErrorBorder.Visibility = Visibility.Collapsed;
+        ErrorText.Visibility = Visibility.Collapsed;
         ResultTabs.Visibility = Visibility.Collapsed;
         Placeholder.Visibility = Visibility.Visible;
     }

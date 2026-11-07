@@ -2,12 +2,4 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
-    <Application.Resources>
-        <SolidColorBrush x:Key="Navy" Color="#1E2A44"/>
-        <SolidColorBrush x:Key="Accent" Color="#F28C28"/>
-        <SolidColorBrush x:Key="AccentSoft" Color="#FFF1E3"/>
-        <SolidColorBrush x:Key="Page" Color="#F5F6FA"/>
-        <SolidColorBrush x:Key="Line" Color="#DDE1EA"/>
-        <SolidColorBrush x:Key="Muted" Color="#6B7280"/>
-    </Application.Resources>
 </Application>
